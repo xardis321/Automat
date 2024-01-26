@@ -20,7 +20,7 @@ void uruchomAutomat() {
     std::cout << "Wybrany napoj to: " << chosen_number << std::endl;
     interakcja.show_price();
     Money money_manager;
-    double total_money = money_manager.check_money(interakcja.get_wybrana_nazwa() == "CocaCola" ? 3.0 : (interakcja.get_wybrana_nazwa() == "Pepsi" ? 5.0 : 4.0));
+    double total_money = money_manager.kasacheck(interakcja.get_wybrana_nazwa() == "CocaCola" ? 3.0 : (interakcja.get_wybrana_nazwa() == "Pepsi" ? 5.0 : 4.0));
 
     if (total_money < 0)
     {
@@ -32,7 +32,7 @@ void uruchomAutomat() {
     sleep(2);
     std::cout << "Oto twoj napoj: " << interakcja.get_wybrana_nazwa() << std::endl;
 
-    double change = money_manager.money_output(interakcja.get_wybrana_nazwa() == "CocaCola" ? 3.0 : (interakcja.get_wybrana_nazwa() == "Pepsi" ? 5.0 : 4.0));
+    double change = money_manager.kasaout(interakcja.get_wybrana_nazwa() == "CocaCola" ? 3.0 : (interakcja.get_wybrana_nazwa() == "Pepsi" ? 5.0 : 4.0));
 
     if (change >= 0)
     {
