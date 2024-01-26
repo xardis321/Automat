@@ -8,104 +8,79 @@
 #include <iostream>
 #include <limits>
 #include <iomanip>
+#include <memory>  // Dołączenie nagłówka dla std::unique_ptr
+
 const int ILOSC = 3;
 
-using namespace std;
-
-class Interakcja
-{
+class Interakcja {
 private:
-    napoj* wybrany_napoj;
+    std::unique_ptr<napoj> wybrany_napoj;
 
 public:
-    Interakcja();               
-    ~Interakcja();              
-    int choose_drink();         
-    void check_number(int& chosen_number); 
+    Interakcja() : wybrany_napoj(nullptr) {} // Inicjalizacja wskaźnika jako nullptr w konstruktorze
+    ~Interakcja() = default; // Domyślny destruktor automatycznie zarządza pamięcią
+
+    int choose_drink();
+    void check_number(int& chosen_number);
     void show_price();
     std::string get_wybrana_nazwa();
 };
-Interakcja::Interakcja() : wybrany_napoj(nullptr) {}
 
-Interakcja::~Interakcja()
-{
-    delete wybrany_napoj; 
-}
-
-int Interakcja::choose_drink()
-{
-    int drinknumber; // użytkownik wybiera numer
-    do
-    {
-        cout << "Wybierz napoj: ";
-        while (!(cin >> drinknumber))
-        {
-            cout << "Nieprawidlowa wartosc. Wybierz ponownie: ";
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+int Interakcja::choose_drink() {
+    int drinknumber;
+    do {
+        std::cout << "Wybierz napoj: ";
+        while (!(std::cin >> drinknumber)) {
+            std::cout << "Nieprawidlowa wartosc. Wybierz ponownie: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
 
-        if (drinknumber > ILOSC)
-        {
-            cout << "Numer poza zakresem. Wybierz numer od 1 do " << ILOSC << "." << endl;
-            continue; // Powrót na początek pętli do
+        if (drinknumber > ILOSC) {
+            std::cout << "Numer poza zakresem. Wybierz numer od 1 do " << ILOSC << "." << std::endl;
+            continue;
         }
 
         check_number(drinknumber);
     } while (drinknumber > ILOSC);
 
-    delete wybrany_napoj; // zwalnia pamięć, jeśli była już zaalokowana
-    switch (drinknumber)
-    {
+    switch (drinknumber) {
     case 1:
-        wybrany_napoj = new CocaCola();
+        wybrany_napoj = std::make_unique<CocaCola>();
         break;
     case 2:
-        wybrany_napoj = new Pepsi();
+        wybrany_napoj = std::make_unique<Pepsi>();
         break;
     case 3:
-        wybrany_napoj = new Sprite();
+        wybrany_napoj = std::make_unique<Sprite>();
         break;
     }
 
     return drinknumber;
 }
 
-
-
-void Interakcja::check_number(int& chosen_number)
-{
-    if ((chosen_number > ILOSC)&&(chosen_number =0))
-    {
-        cout << "Brak wybranego napoju. Wybierz inny numer." << endl;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+void Interakcja::check_number(int& chosen_number) {
+    if ((chosen_number > ILOSC) && (chosen_number = 0)) {
+        std::cout << "Brak wybranego napoju. Wybierz inny numer." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
 
-void Interakcja::show_price()
-{
-    if (wybrany_napoj != nullptr)
-    {
-        cout << fixed << setprecision(2) << "Cena wybranego napoju to: " << wybrany_napoj->get_cena() << " zl.\n" << endl;
-    }
-    else
-    {
-        cout << "Nie wybrano napoju." << endl;
+void Interakcja::show_price() {
+    if (wybrany_napoj != nullptr) {
+        std::cout << std::fixed << std::setprecision(2) << "Cena wybranego napoju to: " << wybrany_napoj->get_cena() << " zl.\n" << std::endl;
+    } else {
+        std::cout << "Nie wybrano napoju." << std::endl;
     }
 }
 
-std::string Interakcja::get_wybrana_nazwa()
-{
-    if (wybrany_napoj != nullptr)
-    {
+std::string Interakcja::get_wybrana_nazwa() {
+    if (wybrany_napoj != nullptr) {
         return wybrany_napoj->get_nazwa();
-    }
-    else
-    {
+    } else {
         return "Brak wybranego napoju";
     }
 }
-
 
 #endif // INTERAKCJA_HPP
